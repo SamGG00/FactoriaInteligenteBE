@@ -1,12 +1,34 @@
 
 const express= require('express')
-const {postArticleService}= require('../services/articleServices')
+const {postArticleService,getArticlesNameService,getArticlesService,getArticlesByPage}= require('../services/articleServices')
 const { uploadImage } = require("../services/imageService.js");
 
+const getArticlesNameController= async (req,res) => {
+  try{
+    const articles = await getArticlesNameService();
+    res.status(200).json({ status: "true", articles });
+  }
+  catch(error){
+    res.status(500).json({ status: "false",message: error.message });
+  }
+}
+const getArticlesByPageController = async (req,res) => {
+  const page = parseInt(req.query.page) || 1;  // Obtén la página desde la query string (si no está definida, usa 1)
+  if (!page){
+    return res.status(400).json({ message: "Debes especificar la página"});
+  }
 
-const PostArticleController=async (req,res)=>{
+  try{
+    const articles = await getArticlesByPage(page);
+    res.status(200).json({ status: "true", articles });
+    
+  }catch(error){
+    res.status(500).json({ status: "false",message: error.message });
+  }
+}
+
+const postArticleController=async (req,res)=>{
     const {title,published,keyword1,keyword2,keyword3,author}=req.body;
-
     // Validar que el archivo sea una imagen y si es imagen colocar en la carpeta uploads
     const field1 = req.file ? `/uploads/${req.file.filename}` : req.body.field1 || null;
     const field2 = req.file ? `/uploads/${req.file.filename}` : req.body.field2 || null;
@@ -14,8 +36,6 @@ const PostArticleController=async (req,res)=>{
     const field4 = req.file ? `/uploads/${req.file.filename}` : req.body.field4 || null;
     const field5 = req.file ? `/uploads/${req.file.filename}` : req.body.field5 || null;
     const field6 = req.file ? `/uploads/${req.file.filename}` : req.body.field6 || null;
-
-
 
     if(!title||!published||
      !keyword1||!keyword2||!keyword3||!author
@@ -45,9 +65,8 @@ const PostArticleController=async (req,res)=>{
       
           if (field1) {
             if (isImage(field1)) {
-              // Si es una imagen, la subimos
-              const req = { file: field1 }; // Simulamos un objeto `req` para Multer
-              const imagePath = await uploadImage(req); // Llamamos a la función para subir la imagen
+              const req = { file: field1 };
+              const imagePath = await uploadImage(req);
               article.field1 = imagePath;
             }
           }
@@ -92,7 +111,7 @@ const PostArticleController=async (req,res)=>{
             } 
           }
         const response=await postArticleService(article);
-        return res.status(201).json(response)
+        return res.status(201).json({status: true, response:response})
     }
     catch(error){
         console.log(error)
@@ -100,4 +119,6 @@ const PostArticleController=async (req,res)=>{
     }
 }
 
-module.exports={PostArticleController}
+
+
+module.exports={postArticleController,getArticlesNameController,getArticlesByPageController}

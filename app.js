@@ -1,7 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+
 require('dotenv').config();
 
+// Configuración de CORS
+const corsOptions = {
+    origin:  '*',
+    credentials: true,
+    optionsSuccessStatus: 200
+  };
+  
+  app.use(cors(corsOptions));
 
 // Middleware para trabajar con JSON
 app.use(express.json());
