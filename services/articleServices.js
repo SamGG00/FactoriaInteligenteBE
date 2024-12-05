@@ -27,10 +27,18 @@ const getArticlesByPage = async (page = 1, limit = 20) => {
   try {
     const offset = (page - 1) * limit;
     const [response] = await pool.execute(
-      `SELECT id_articulo,titulo, fecha_actualizado, fecha_publicado, publicado, autor 
-       FROM articulos 
+      `SELECT 
+          articulos.id_articulo, 
+          articulos.titulo, 
+          articulos.fecha_actualizado, 
+          articulos.fecha_publicado, 
+          articulos.publicado, 
+          usuarios.primer_nombre,
+          usuarios.primer_apellido
+       FROM articulos
+       LEFT JOIN usuarios ON articulos.autor = usuarios.id
        LIMIT ? OFFSET ?`,
-      [limit, offset]  // Asegúrate de que 'limit' esté primero y luego 'offset'
+      [limit, offset]
     );
     return response;
   } catch (error) {
