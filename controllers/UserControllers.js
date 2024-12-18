@@ -4,7 +4,7 @@ const {
   postUserService,
 } = require("../services/userServices");
 
-const getAllUsersController = async (res) => {
+const getAllUsersController = async (req,res) => {
   try {
     const users = await getAllUsersService();
     res.status(200).json({ status: "true", users });

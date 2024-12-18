@@ -19,8 +19,10 @@ app.use(express.json());
 // Importar y usar las rutas
 const usersRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');
+const authRoutes = require('./routes/authRoues');
+
 
 app.use('/users', usersRoutes); // Prefijo para las rutas de usuarios
 app.use('/article', articleRoutes); // Prefijo para las rutas de usuarios
-
+app.use('/auth',authRoutes)
 module.exports = app;

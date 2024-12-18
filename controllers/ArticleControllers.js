@@ -64,6 +64,14 @@ const postArticleController=async (req,res)=>{
           };
       
           if (field1) {
+              const req = { file: field1 };
+              const filePath = await uploadImage(req);
+              article.field1 = filePath;
+           
+          }
+
+
+          if (field1) {
             if (isImage(field1)) {
               const req = { file: field1 };
               const imagePath = await uploadImage(req);

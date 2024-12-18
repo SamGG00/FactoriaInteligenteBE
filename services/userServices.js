@@ -1,4 +1,13 @@
 const pool = require('../config/database.js');
+const bcrypt=require('bcrypt');
+
+
+const encryptPassword= async(password)=>{
+  const saltRounds=10;
+  const hashedPassword=await bcrypt.hash(password,saltRounds);
+
+  return hashedPassword;
+}
 
 const getAllUsersService = async () => {
     try {
@@ -24,8 +33,10 @@ const postUserService= async(obj)=>{
           return 'El usuario ya existe'
       }
   
+      const hashedPassword=await encryptPassword(password);
+
       const [response]=await pool.execute('INSERT INTO usuarios (usuario,contraseña,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido) VALUES (?,?,?,?,?,?)',
-        [user, password, name, name2, last_name, last_name2]
+        [user, hashedPassword, name, name2, last_name, last_name2]
       )
       console.log('usuario insertado:')
       return response;
