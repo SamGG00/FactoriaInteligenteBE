@@ -11,9 +11,11 @@ const authController= async (req,res) => {
     }
     
     const user = await authUserService(username,password)
-    if (!user) {
+    if (!user.status) {
         return res.status(401).json({ message: "Credenciales inválidas" });
       }
+    
+      console.log("controlador return: ", user)
     
     const payload = {
         id: user.id,
@@ -30,7 +32,8 @@ const authController= async (req,res) => {
       });
 
 
-    res.status(200).json({ status:true, message: "Inicio de sesión exitoso",user:user.usuario })
+    console.log(user)
+    res.status(200).json({ status:true, message: "Inicio de sesión exitoso",user:user.user,id:user.id })
 
 }
 

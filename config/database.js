@@ -2,6 +2,7 @@ const mysql = require('mysql2/promise'); // Importa la versión de promesas
 
 require('dotenv').config(); // Carga las variables del .env
 
+
 // Crear el pool de conexiones
 const pool = mysql.createPool({
   host: process.env.DB_HOST,

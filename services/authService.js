@@ -18,7 +18,7 @@ const authUserService= async(user,password) =>{
       const hashedPassword=rows[0].contraseña
       const isMatched= isMatch(password,hashedPassword)
       if (isMatched){
-        return true;
+        return {status:true,id:rows[0].id,user:rows[0].usuario};
       }
       
     } catch (error) {
