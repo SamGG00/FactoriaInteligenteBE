@@ -2,6 +2,7 @@
 const express= require('express')
 const {authUserService}= require('../services/authService')
 const {generateToken}=require('../services/tokenService')
+const jwt=require("jsonwebtoken")
 
 
 const authController= async (req,res) => {
@@ -15,26 +16,40 @@ const authController= async (req,res) => {
         return res.status(401).json({ message: "Credenciales inválidas" });
       }
     
-      console.log("controlador return: ", user)
     
     const payload = {
         id: user.id,
-        username: user.username,
+        username: user.user,
        
      };
     const token = generateToken(payload, "5h"); // Token válido por 5 h
     
     res.cookie('authToken', token, {
-        httpOnly: false, // Evita que el token sea accesible desde JavaScript, cambiar a true en produccion
-        secure: process.env.NODE_ENV === 'production', // Solo en HTTPS en produccion
-        sameSite: 'strict', // Protege contra ataques CSRF
-        maxAge: 5 * 60 * 60 * 1000, // Tiempo de expiración en milisegundos 
+      httpOnly: true, // Previene el acceso desde JavaScript
+  secure: false, // Cambiar a true solo en producción (cuando uses HTTPS)
+ /*  sameSite: 'None',  */// Esto es importante si estás trabajando con un frontend en otro dominio
+  maxAge: 5 * 60 * 60 * 1000, // 5 horas
       });
 
 
-    console.log(user)
-    res.status(200).json({ status:true, message: "Inicio de sesión exitoso",user:user.user,id:user.id })
+    return res.status(200).json({ status:true, message: "Inicio de sesión exitoso",user:user.user,id:user.id })
 
 }
 
-module.exports = {authController}
+
+const validateToken = (req, res) => {
+  const token = req.cookies.authToken;
+  if (!token) {
+    return res.status(401).json({ status: false, message: 'Token no proporcionado' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return res.status(200).json({ status: true, user: decoded });
+  } catch (err) {
+    return res.status(403).json({ status: false, message: 'Token inválido o expirado' });
+  }
+};
+
+
+module.exports = {authController,validateToken}

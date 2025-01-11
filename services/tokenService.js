@@ -9,13 +9,9 @@ const jwt=require("jsonwebtoken")
  */
 
 
-const generateToken = (payload, secretKey = process.env.SECRET_JWT_KEY, expiresIn = '1h') => {
-    if (!secretKey) {
-      throw new Error('La clave secreta JWT no está definida');
-    }
-    
+const generateToken = (payload, expiresIn = '1h') => {
     try {
-      const token = jwt.sign(payload, secretKey, { expiresIn });
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
       return token;
     } catch (error) {
       console.error('Error al generar el token:', error);

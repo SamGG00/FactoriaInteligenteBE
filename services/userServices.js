@@ -12,7 +12,6 @@ const encryptPassword= async(password)=>{
 const getAllUsersService = async () => {
     try {
       const [rows] = await pool.execute('SELECT * FROM usuarios'); // Ejecuta la consulta y espera el resultado
-      console.log("Usuarios:", rows);
       return rows; // Devuelve los resultados
     } catch (error) {
       console.error('Error al obtener los usuarios:', error);
@@ -38,7 +37,6 @@ const postUserService= async(obj)=>{
       const [response]=await pool.execute('INSERT INTO usuarios (usuario,contraseña,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido) VALUES (?,?,?,?,?,?)',
         [user, hashedPassword, name, name2, last_name, last_name2]
       )
-      console.log('usuario insertado:')
       return response;
     }catch(err){
       console.error('Error al insertar el usuario:', err);

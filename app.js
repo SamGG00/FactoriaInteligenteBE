@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
 // Configuración de CORS
 const corsOptions = {
-    origin:  '*',
+    origin:  'http://localhost:5173',
     credentials: true,
     optionsSuccessStatus: 200
   };
@@ -16,6 +17,7 @@ const corsOptions = {
 // Middleware para trabajar con JSON
 app.use(express.json());
 
+app.use(cookieParser()); 
 // Importar y usar las rutas
 const usersRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');
