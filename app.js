@@ -21,8 +21,7 @@ app.use(cookieParser());
 // Importar y usar las rutas
 const usersRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');
-const authRoutes = require('./routes/authRoues');
-
+const authRoutes = require('./routes/authRoutes');
 
 app.use('/users', usersRoutes); // Prefijo para las rutas de usuarios
 app.use('/article', articleRoutes); // Prefijo para las rutas de usuarios
