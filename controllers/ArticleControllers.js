@@ -28,7 +28,9 @@ const getArticlesByPageController = async (req,res) => {
 }
 
 const postArticleController=async (req,res)=>{
-    const {title,published,keyword1,keyword2,keyword3,author}=req.body;
+
+  console.log(req.body);
+    const {title,published,keywords,author}=req.body;
     // Validar que el archivo sea una imagen y si es imagen colocar en la carpeta uploads
     const field1 = req.file ? `/uploads/${req.file.filename}` : req.body.field1 || null;
     const field2 = req.file ? `/uploads/${req.file.filename}` : req.body.field2 || null;
@@ -37,8 +39,8 @@ const postArticleController=async (req,res)=>{
     const field5 = req.file ? `/uploads/${req.file.filename}` : req.body.field5 || null;
     const field6 = req.file ? `/uploads/${req.file.filename}` : req.body.field6 || null;
 
-    if(!title||!published||
-     !keyword1||!keyword2||!keyword3||!author
+    if(!title||!published
+     ||!keywords||!author
     ){
         return res.status(400).json({message:"Todos los campos son obligatorios"})
     }
@@ -46,9 +48,7 @@ const postArticleController=async (req,res)=>{
         const article={
             title,
             published,
-            keyword1,
-            keyword2,
-            keyword3,
+            keywords,
             author,
             field1,
             field2,
@@ -63,14 +63,6 @@ const postArticleController=async (req,res)=>{
             return file && allowedMimeTypes.includes(file.mimetype);
           };
       
-          if (field1) {
-              const req = { file: field1 };
-              const filePath = await uploadImage(req);
-              article.field1 = filePath;
-           
-          }
-
-
           if (field1) {
             if (isImage(field1)) {
               const req = { file: field1 };
@@ -125,6 +117,10 @@ const postArticleController=async (req,res)=>{
         console.log(error)
         return res.status(500).json({message:"Error al crear el articulo"})
     }
+}
+
+const deleteArticleController=async (req,res) => {
+  
 }
 
 
