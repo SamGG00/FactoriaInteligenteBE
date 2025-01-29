@@ -11,6 +11,20 @@ const getArticlesService= async() =>{
     return error
   }
 }
+
+const getArticleByIdService= async(id) =>{
+  try{
+    const [row]=await pool.execute(
+      "SELECT titulo,fecha_actualizado,fecha_publicado,publicado,autor FROM articulos WHERE id_articulo=?",
+      [id]
+    );
+    return row
+  }catch(error){
+    console.error("Error al obtener artículo por id:", error);
+    return error
+  }
+}
+
 const getArticlesNameService= async()=>{
   try{
     const [row]=await pool.execute(
@@ -86,7 +100,19 @@ const postArticleService = async (obj) => {
 };
 
 const deleteArticleService=async (idArticle) => {
-  
+  try{
+    const query = "DELETE FROM articulos WHERE id_articulo = ?";
+    const [response] = await pool.execute(query, [idArticle]);
+    if (response.affectedRows > 0) {
+      return { status: true};
+    } else {
+      return { status: false};
+    }
+  }
+  catch(err){
+    throw new Error(`Error in deleting post article ${err}`);
+  }
 }
 
-module.exports = { postArticleService,getArticlesNameService,getArticlesService,getArticlesByPage };
+  
+  module.exports = { postArticleService,getArticlesNameService,getArticlesService,getArticlesByPage,deleteArticleService,getArticlesService,getArticleByIdService };
