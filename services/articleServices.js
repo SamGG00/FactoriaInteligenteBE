@@ -15,10 +15,10 @@ const getArticlesService= async() =>{
 const getArticleByIdService= async(id) =>{
   try{
     const [row]=await pool.execute(
-      "SELECT titulo,fecha_actualizado,fecha_publicado,publicado,autor FROM articulos WHERE id_articulo=?",
+      "SELECT titulo,fecha_actualizado,fecha_publicado,publicado,autor,campo1,campo2,campo3,campo4,campo5,campo6 FROM articulos WHERE id_articulo=?",
       [id]
     );
-    return row
+    return row[0]
   }catch(error){
     console.error("Error al obtener artículo por id:", error);
     return error
