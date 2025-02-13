@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
+const path = require("path");
+
 
 require('dotenv').config();
 
@@ -18,6 +20,7 @@ const corsOptions = {
 app.use(express.json());
 
 app.use(cookieParser()); 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Importar y usar las rutas
 const usersRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');

@@ -97,7 +97,7 @@ const deleteArticleController = async (req, res) => {
     fields.forEach((field) => {
       if (field) {
         const fileName = path.basename(field); 
-        const imagePath = path.join(__dirname, "../uploads", fileName); 
+        const imagePath = path.join(__dirname, "../uploads", fileName ); 
         if (fs.existsSync(imagePath)) {
           fs.unlinkSync(imagePath);
         }
@@ -118,9 +118,28 @@ const deleteArticleController = async (req, res) => {
   }
 };
 
+const getArticleByIdController = async (req,res) =>{
+  const { id } = req.params; // Obtén el ID del artículo desde los parámetros de la URL
+  if (!id) {
+    return res
+     .status(400)
+     .json({ message: "El ID del artículo es obligatorio" });
+  }
+  try {
+      const article = await getArticleByIdService(id);
+      if (!article) {
+        return res.status(404).json({ message: "Artículo no encontrado" });
+      }
+      return res.status(200).json({ status: true, article });
+  } catch (error) {
+    return res.status(400).json({error:error, message: "articulo no encontrado" });
+  }
+}
+
 module.exports = {
   postArticleController,
   getArticlesNameController,
   getArticlesByPageController,
   deleteArticleController,
+  getArticleByIdController
 };
