@@ -3,10 +3,22 @@ const {
   getArticlesNameService,
   getArticlesByPage,
   deleteArticleService,
-  getArticleByIdService
+  getArticleByIdService,
+  editArticleService
 } = require("../services/articleServices");
 const path = require('path');
 const fs = require('fs');
+
+
+const deleteOldFile = (oldFile) => {
+  if (oldFile) {
+    const filePath = path.join(__dirname, "../uploads", oldFile);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
+};
+
 
 
 const getArticlesNameController = async (req, res) => {
@@ -68,6 +80,75 @@ const postArticleController = async (req, res) => {
   }
 };
 
+
+const getArticleByIdController = async (req,res) =>{
+  const { id } = req.params; // Obtén el ID del artículo desde los parámetros de la URL
+  if (!id) {
+    return res
+     .status(400)
+     .json({ message: "El ID del artículo es obligatorio" });
+  }
+  try {
+      const article = await getArticleByIdService(id);
+      if (!article) {
+        return res.status(404).json({ message: "Artículo no encontrado" });
+      }
+      return res.status(200).json({ status: true, article });
+  } catch (error) {
+    return res.status(400).json({error:error, message: "articulo no encontrado" });
+  }
+}
+
+const editArticleByIdController = async (req,res) =>{
+   const { id } = req.params
+   const {title,published,keywords} = req.body
+
+   try{
+    const existingArticle = await getArticleByIdService(id);
+    if (!existingArticle) {
+      return res.status(404).json({ message: "Artículo no encontrado" });
+    }
+    const fields = ["field1", "field2", "field3", "field4", "field5", "field6"];
+    const campos = ["campo1", "campo2", "campo3", "campo4", "campo5", "campo6"];
+
+    const updatedFields = {};
+    fields.forEach((field,index) => {
+      const campo = campos[index]
+      if (req.files?.[field]) {
+        console.log(req.files[field][0].filename)
+        deleteOldFile(existingArticle[campo])
+        updatedFields[campo] = req.files[field][0].filename; // Si es un archivo, se usa el nombre
+
+      } else if (req.body?.[field]) {
+        updatedFields[campo] = req.body[field]; // Si está en req.body, se usa el valor enviado
+      } else {
+        updatedFields[campo] = existingArticle[campo]; // Si no se envió nada, se mantiene el valor anterior
+      }
+    });
+
+    if (existingArticle.titulo != title){
+      updatedFields.titulo= title;
+    } else {
+      updatedFields.titulo= existingArticle.titulo;
+    }
+    if (existingArticle.publicado!= published){
+      updatedFields.publicado= published;
+    } else {
+      updatedFields.publicado= existingArticle.publicado;
+    }
+    if (existingArticle.palabras_clave!= keywords){
+      updatedFields.palabras_clave= keywords;
+    } else {
+      updatedFields.palabras_clave= existingArticle.palabras_clave;
+    }
+
+    const response = await editArticleService(id, updatedFields);
+    return res.status(200).json({ status: true, response });
+   }catch{
+     return res.status(500).json({ message: "Error al editar el articulo" });
+   }
+}
+
 const deleteArticleController = async (req, res) => {
   const { id } = req.params; // Obtén el ID del artículo desde los parámetros de la URL
 
@@ -118,28 +199,12 @@ const deleteArticleController = async (req, res) => {
   }
 };
 
-const getArticleByIdController = async (req,res) =>{
-  const { id } = req.params; // Obtén el ID del artículo desde los parámetros de la URL
-  if (!id) {
-    return res
-     .status(400)
-     .json({ message: "El ID del artículo es obligatorio" });
-  }
-  try {
-      const article = await getArticleByIdService(id);
-      if (!article) {
-        return res.status(404).json({ message: "Artículo no encontrado" });
-      }
-      return res.status(200).json({ status: true, article });
-  } catch (error) {
-    return res.status(400).json({error:error, message: "articulo no encontrado" });
-  }
-}
 
 module.exports = {
   postArticleController,
   getArticlesNameController,
   getArticlesByPageController,
   deleteArticleController,
-  getArticleByIdController
+  getArticleByIdController,
+  editArticleByIdController
 };
