@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
 const path = require("path");
-
+const testRoute = require("./routes/testRoute");
 
 require('dotenv').config();
 
@@ -29,4 +29,7 @@ const authRoutes = require('./routes/authRoutes');
 app.use('/users', usersRoutes); // Prefijo para las rutas de usuarios
 app.use('/article', articleRoutes); // Prefijo para las rutas de usuarios
 app.use('/auth',authRoutes)
+
+app.use("/api", testRoute);
+
 module.exports = app;
