@@ -8,19 +8,22 @@ const app = express();
 
 // CORS
 const corsOptions = {
-    origin: [
-        "http://localhost:5173",
-        "https://factoria-frontend.vercel.app",
-        "https://factoria-frontend.netlify.app"
-    ],
-    credentials: true,
-    optionsSuccessStatus: 200
+  origin: [
+    "http://localhost:5173",
+    "https://factoria-frontend.vercel.app",
+    "https://factoria-frontend.netlify.app"
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.get("/", (req, res) => {
+  res.json({ message: "El backend está funcionando correctamente 🚀" });
+});
 
 // Importar rutas correctamente
 const usersRoutes = require("./routes/userRoutes");
@@ -35,8 +38,8 @@ app.use("/api", testRoute);
 
 // Middleware para capturar errores
 app.use((err, req, res, next) => {
-    console.error("❌ Error en Express:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+  console.error("❌ Error en Express:", err);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 module.exports = app;
