@@ -15,4 +15,9 @@ router.get("/test-db", async (req, res) => {
   }
 });
 
+router.get("/ping", (req, res) => {
+  res.json({ message: "API funcionando 🚀" });
+});
+
+
 module.exports = router;
