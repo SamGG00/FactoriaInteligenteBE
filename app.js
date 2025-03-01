@@ -29,12 +29,12 @@ app.get("/", (req, res) => {
 const usersRoutes = require("./routes/userRoutes");
 const articleRoutes = require("./routes/articleRoutes");
 const authRoutes = require("./routes/authRoutes");
-const testRoute = require("./routes/testRoute");
+const testRoutes = require("./routes/testRoutes");
 
 app.use("/users", usersRoutes);
 app.use("/article", articleRoutes);
 app.use("/auth", authRoutes);
-app.use("/api", testRoute);
+app.use("/api", testRoutes);
 
 // Middleware para capturar errores
 app.use((err, req, res, next) => {
