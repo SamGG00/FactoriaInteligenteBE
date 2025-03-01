@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("../database"); // Importa la conexión a MySQL
+const pool = require("../config/database"); // Importa la conexión a MySQL
 
 const router = express.Router();
 
