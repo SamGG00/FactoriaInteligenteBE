@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const app = express();
 
-// 🔹 Configuración de CORS
+// CORS
 const corsOptions = {
     origin: [
         "http://localhost:5173",
@@ -18,21 +18,25 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// 🔹 Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// 🔹 Importar rutas correctamente
+// Importar rutas correctamente
 const usersRoutes = require("./routes/userRoutes");
 const articleRoutes = require("./routes/articleRoutes");
 const authRoutes = require("./routes/authRoutes");
-const testRoute = require("./routes/testRoute"); // 🔹 Ahora está bien importado
+const testRoute = require("./routes/testRoute");
 
-// 🔹 Usar las rutas
 app.use("/users", usersRoutes);
 app.use("/article", articleRoutes);
 app.use("/auth", authRoutes);
-app.use("/api", testRoute); // Ahora funcionará correctamente
+app.use("/api", testRoute);
+
+// Middleware para capturar errores
+app.use((err, req, res, next) => {
+    console.error("❌ Error en Express:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+});
 
 module.exports = app;
