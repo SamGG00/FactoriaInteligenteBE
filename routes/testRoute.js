@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("../database"); // Importar la conexión a la BD
+const pool = require("../config/database"); // Importar la conexión a la BD
 
 const router = express.Router();
 
