@@ -30,7 +30,7 @@ const getArticlesNameController = async (req, res) => {
   }
 };
 const getArticlesByPageController = async (req, res) => {
-  const page = parseInt(req.query.page) || 1; 
+  const page = parseInt(req.params.id) || 1; 
   if (!page) {
     return res.status(400).json({ message: "Debes especificar la página" });
   }
