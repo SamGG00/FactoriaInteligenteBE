@@ -17,6 +17,6 @@ router.put("/article/:id", authenticateToken,uploadFields, editArticleByIdContro
 router.get("/articlesName", authenticateToken, getArticlesNameController);
 router.delete("/article/:id",authenticateToken, deleteArticleController);
 
-router.get("  /articles",  getArticlesByPageController);
+router.get("/articles",  getArticlesByPageController);
 router.get("/:id",  getArticleByIdController)
 module.exports = router;

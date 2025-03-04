@@ -40,7 +40,6 @@ const getArticlesNameService = async () => {
 const getArticlesByPage = async (page = 1, limit = 20) => {
   try {
     const offset = (page - 1) * limit;
-    
     console.log(limit);
     console.log(offset);
     const [response] = await pool.execute(
