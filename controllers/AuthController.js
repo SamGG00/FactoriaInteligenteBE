@@ -27,7 +27,7 @@ const authController = async (req, res) => {
   res.cookie('authToken', token, {
     httpOnly: true, // Previene el acceso desde JavaScript
     secure: true, // Cambiar a true solo en producción (cuando uses HTTPS)
-    /*  sameSite: 'None',  */// Esto es importante si estás trabajando con un frontend en otro dominio
+    sameSite: 'None',/// Esto es importante si estás trabajando con un frontend en otro dominio
     maxAge: 5 * 60 * 60 * 1000, // 5 horas
   });
 
