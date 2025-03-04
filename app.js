@@ -10,8 +10,7 @@ const app = express();
 const corsOptions = {
     origin: [
         "http://localhost:5173",
-        "https://factoria-frontend.vercel.app",
-        "https://factoria-frontend.netlify.app"
+        "https://factoria-inteligente-fe.vercel.app"
     ],
     credentials: true,
     optionsSuccessStatus: 200
