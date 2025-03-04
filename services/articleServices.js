@@ -41,9 +41,6 @@ const getArticlesNameService = async () => {
 const getArticlesByPage = async (page = 1, limit = 20) => {
   try {
     let offset = (page - 1) * limit;
-    if (offset < 1) {
-      offset = 1;
-    }
     console.log(limit);
     console.log(offset);
     const [response] = await pool.execute(
@@ -55,10 +52,9 @@ const getArticlesByPage = async (page = 1, limit = 20) => {
           articulos.publicado, 
           usuarios.primer_nombre,
           usuarios.primer_apellido
-       FROM articulos
-       LEFT JOIN usuarios ON articulos.autor = usuarios.id
-       LIMIT ? OFFSET ?`,
-      [limit, offset]
+          FROM articulos
+          LEFT JOIN usuarios ON articulos.autor = usuarios.id
+         LIMIT ${limit} OFFSET ${offset}`
     );
     if (response.length === 0) {
       return { status: false, message: "No hay artículos" };

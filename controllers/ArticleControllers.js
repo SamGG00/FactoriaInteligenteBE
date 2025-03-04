@@ -8,6 +8,7 @@ const {
 } = require("../services/articleServices");
 const path = require('path');
 const fs = require('fs');
+const { resourceLimits } = require("worker_threads");
 
 
 const deleteOldFile = (oldFile) => {
@@ -36,7 +37,8 @@ const getArticlesByPageController = async (req, res) => {
   }
 
   try {
-    const articles = await getArticlesByPage(page);
+    let limit = page*20;
+    const articles = await getArticlesByPage(page,limit);
     res.status(200).json({ status: "true", articles });
   } catch (error) {
     res.status(500).json({ status: "false", message: error.message });
