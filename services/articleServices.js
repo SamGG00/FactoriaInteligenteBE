@@ -1,3 +1,4 @@
+const { off } = require("../app.js");
 const pool = require("../config/database.js");
 
 const getArticlesService = async () => {
@@ -39,7 +40,10 @@ const getArticlesNameService = async () => {
 
 const getArticlesByPage = async (page = 1, limit = 20) => {
   try {
-    const offset = (page - 1) * limit;
+    let offset = (page - 1) * limit;
+    if (offset < 1) {
+      offset = 1;
+    }
     console.log(limit);
     console.log(offset);
     const [response] = await pool.execute(
@@ -111,8 +115,8 @@ const editArticleService = async (idArticle, data) => {
       .map((key) => `${key} = ?`)
       .join(", ");
     const query = `UPDATE articulos SET ${fieldsToUpdate} WHERE id_articulo = ?`;
-    const [result] = await pool.execute(query, [data.campo1, data.campo2, data.campo3, data.campo4, data.campo5, data.campo6, 
-      data.titulo, data.publicado, data.palabras_clave, idArticle]);
+    const [result] = await pool.execute(query, [data.campo1, data.campo2, data.campo3, data.campo4, data.campo5, data.campo6,
+    data.titulo, data.publicado, data.palabras_clave, idArticle]);
     if (result.affectedRows === 0) {
       return {
         status: false,
