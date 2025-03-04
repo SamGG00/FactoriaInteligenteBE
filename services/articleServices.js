@@ -54,6 +54,9 @@ const getArticlesByPage = async (page = 1, limit = 20) => {
        LIMIT ? OFFSET ?`,
       [limit, offset]
     );
+    if (response.length === 0) {
+      return { status: false, message: "No hay artículos" };
+    }
     return response;
   } catch (error) {
     console.error(error); // Es importante registrar el error para diagnóstico
